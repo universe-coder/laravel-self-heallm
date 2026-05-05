@@ -1,0 +1,28 @@
+/vendor/
+
+# Package dependencies and build artifacts
+/.phpunit.result.cache
+/.cache/
+
+# Local environment files
+/.env
+/.env.*
+
+# IDE and OS files
+/.idea/
+/.vscode/
+.DS_Store
+
+# Testbench / runtime artifacts
+/bootstrap/cache/*.php
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/**
+/storage/framework/sessions/**
+/storage/framework/testing/**
+/storage/framework/views/**
+/storage/framework/data/**
+
+# Keep generated report and dedup state out of git
+/storage/logs/self-heal-report.jsonl
+/storage/framework/cache/self-heal-dedup*.json
