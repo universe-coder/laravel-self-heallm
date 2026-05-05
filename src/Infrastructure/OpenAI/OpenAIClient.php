@@ -100,6 +100,9 @@ Line:
 
 Code snippet:
 {$context->snippet}
+
+Full file content (truncated by config if needed):
+{$context->fileContent}
 PROMPT;
     }
 }

@@ -13,7 +13,7 @@ final class ErrorDetector
     {
     }
 
-    public function detectFromLog(string $logPath, int $maxLines): ?ErrorContext
+    public function detectFromLog(string $logPath, int $maxLines, int $maxFileChars = 12000): ?ErrorContext
     {
         if (!$this->files->exists($logPath)) {
             return null;
@@ -40,7 +40,8 @@ final class ErrorDetector
             }
 
             $snippet = $this->extractSnippet($filePath, $lineNumber);
-            return new ErrorContext($message, $filePath, $lineNumber, [], $snippet, $line);
+            $fileContent = $this->extractFileContent($filePath, $maxFileChars);
+            return new ErrorContext($message, $filePath, $lineNumber, [], $snippet, $fileContent, $line);
         }
 
         return null;
@@ -62,5 +63,20 @@ final class ErrorDetector
         }
 
         return implode(PHP_EOL, $snippet);
+    }
+
+    private function extractFileContent(string $filePath, int $maxFileChars): string
+    {
+        if ($filePath === '' || !$this->files->exists($filePath)) {
+            return '';
+        }
+
+        $content = (string) $this->files->get($filePath);
+
+        if ($maxFileChars > 0 && strlen($content) > $maxFileChars) {
+            return substr($content, 0, $maxFileChars);
+        }
+
+        return $content;
     }
 }

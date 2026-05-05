@@ -15,6 +15,7 @@ final class ErrorContext
         public readonly int $line,
         public readonly array $stack,
         public readonly string $snippet,
+        public readonly string $fileContent,
         public readonly string $rawLogLine
     ) {
     }

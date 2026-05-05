@@ -55,4 +55,7 @@ return [
         'path' => env('SELF_HEAL_LOG_PATH', storage_path('logs/laravel.log')),
         'max_lines' => (int) env('SELF_HEAL_LOG_MAX_LINES', 200),
     ],
+    'context' => [
+        'max_file_chars' => (int) env('SELF_HEAL_CONTEXT_MAX_FILE_CHARS', 12000),
+    ],
 ];

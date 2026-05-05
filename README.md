@@ -21,6 +21,7 @@ php artisan vendor:publish --tag=self-heal-config
 - Modes: `enabled`, `auto_apply`, `dry_run`
 - Safety: `allowed_paths`, `forbidden_paths`, `max_files_per_fix`
 - Deduplication: `deduplication.enabled`, `deduplication.ttl_seconds`, `deduplication.store_path`
+- Model context size: `context.max_file_chars`
 - Reporting: JSONL fallback path via `reporting.json_path`
 
 Environment variables example:
@@ -43,6 +44,7 @@ SELF_HEAL_SENTRY_ENABLED=false
 SELF_HEAL_SENTRY_DSN=
 SELF_HEAL_DEDUP_ENABLED=true
 SELF_HEAL_DEDUP_TTL_SECONDS=600
+SELF_HEAL_CONTEXT_MAX_FILE_CHARS=12000
 ```
 
 ## Run
@@ -56,7 +58,7 @@ php artisan self-heal:run
 - Fixes are accepted only for whitelisted paths.
 - Forbidden paths are rejected even if model suggests them.
 - Empty replacement targets are rejected.
-- `dry_run=true` produces report only, no file writes.
+- `dry_run=false` with `auto_apply=true` applies validated patches automatically.
 - Duplicate error fingerprint is skipped during deduplication TTL.
 
 ## Reporting

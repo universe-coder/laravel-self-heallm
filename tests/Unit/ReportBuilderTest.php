@@ -14,7 +14,7 @@ final class ReportBuilderTest extends TestCase
 {
     public function test_it_builds_report_payload(): void
     {
-        $context = new ErrorContext('boom', 'app/X.php', 12, [], '12: code', 'raw');
+        $context = new ErrorContext('boom', 'app/X.php', 12, [], '12: code', '<?php echo 1;', 'raw');
         $proposal = new FixProposal('fix', []);
         $validation = new ValidationResult(true, [], []);
         $result = ['applied' => 1, 'failed' => 0, 'details' => ['ok']];

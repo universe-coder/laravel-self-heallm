@@ -34,7 +34,8 @@ final class SelfHealPipeline
 
         $context = $this->detector->detectFromLog(
             (string) $this->config->get('self-heal.log.path'),
-            (int) $this->config->get('self-heal.log.max_lines', 200)
+            (int) $this->config->get('self-heal.log.max_lines', 200),
+            (int) $this->config->get('self-heal.context.max_file_chars', 12000)
         );
 
         if ($context === null) {

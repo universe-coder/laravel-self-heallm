@@ -19,7 +19,7 @@ final class ErrorDeduplicatorTest extends TestCase
         $filesystem->put($storePath, '{}');
 
         $deduplicator = new ErrorDeduplicator($filesystem);
-        $context = new ErrorContext('boom', 'app/X.php', 10, [], '', 'raw');
+        $context = new ErrorContext('boom', 'app/X.php', 10, [], '', '<?php', 'raw');
         $fingerprint = $deduplicator->fingerprint($context);
 
         self::assertTrue($deduplicator->shouldProcess($storePath, $fingerprint, 600));
