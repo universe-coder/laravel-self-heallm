@@ -1,5 +1,15 @@
 # laravel-self-heallm
 
+[![Latest Version](https://img.shields.io/packagist/v/self-heallm/laravel-self-heallm.svg?style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
+[![License](https://img.shields.io/packagist/l/self-heallm/laravel-self-heallm.svg?style=flat-square)](LICENSE)
+[![PHP Version](https://img.shields.io/packagist/dependency-v/self-heallm/laravel-self-heallm/php.svg?style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
+[![Laravel](https://img.shields.io/packagist/dependency-v/self-heallm/laravel-self-heallm/illuminate%2Fsupport.svg?label=laravel&style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
+[![Total Downloads](https://img.shields.io/packagist/dt/self-heallm/laravel-self-heallm.svg?style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
+[![Monthly Downloads](https://img.shields.io/packagist/dm/self-heallm/laravel-self-heallm.svg?style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
+[![GitHub Stars](https://img.shields.io/github/stars/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/commits/main)
+[![Open Issues](https://img.shields.io/github/issues/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/issues)
+
 Open-source Laravel package that detects recent application errors, asks an LLM for a fix proposal via OpenAI-compatible API, validates safety rules, applies fixes in hybrid mode, and sends healing reports.
 
 ## Installation
