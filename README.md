@@ -1,4 +1,4 @@
-# laravel-self-heallm
+# Laravel Self-HeaLLM
 
 [![Latest Version](https://img.shields.io/packagist/v/self-heallm/laravel-self-heallm.svg?style=flat-square)](https://packagist.org/packages/self-heallm/laravel-self-heallm)
 [![License](https://img.shields.io/packagist/l/self-heallm/laravel-self-heallm.svg?style=flat-square)](LICENSE)
@@ -10,18 +10,30 @@
 [![Last Commit](https://img.shields.io/github/last-commit/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/commits/main)
 [![Open Issues](https://img.shields.io/github/issues/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/issues)
 
-Open-source Laravel package that detects recent application errors, asks an LLM for a fix proposal via OpenAI-compatible API, validates safety rules, applies fixes in hybrid mode, and sends healing reports.
+Open-source Laravel package that detects recent application errors, asks an LLM for a fix proposal via an OpenAI-compatible API, validates safety rules, applies fixes in hybrid mode, and sends healing reports.
 
-## Installation
+## What It Does
+
+- Detects recent app errors and builds a repair context.
+- Requests a fix proposal from an OpenAI-compatible model.
+- Validates proposed changes against strict safety rules.
+- Applies validated fixes in `dry-run` or auto-apply mode.
+- Sends reports to chat/monitoring channels.
+
+## Quick Start
+
+### 1) Install
 
 ```bash
 composer require self-heallm/laravel-self-heallm
 php artisan vendor:publish --tag=self-heal-config
 ```
 
-## Configuration
+### 2) Configure
 
-`config/self-heal.php` supports:
+Main config file: `config/self-heal.php`
+
+Supported sections:
 
 - OpenAI: `openai.base_url`, `openai.token`, `openai.model`, `openai.timeout`
 - Telegram: `telegram.bot_token`, `telegram.user_id`, `telegram.enabled`
@@ -34,7 +46,7 @@ php artisan vendor:publish --tag=self-heal-config
 - Model context size: `context.max_file_chars`
 - Reporting: JSONL fallback path via `reporting.json_path`
 
-Environment variables example:
+Example `.env` values:
 
 ```dotenv
 SELF_HEAL_ENABLED=true
@@ -57,7 +69,7 @@ SELF_HEAL_DEDUP_TTL_SECONDS=600
 SELF_HEAL_CONTEXT_MAX_FILE_CHARS=12000
 ```
 
-## Run
+### 3) Run
 
 ```bash
 php artisan self-heal:run
@@ -65,16 +77,16 @@ php artisan self-heal:run
 
 ## Security Model
 
-- Fixes are accepted only for whitelisted paths.
-- Forbidden paths are rejected even if model suggests them.
-- Empty replacement targets are rejected.
-- `dry_run=false` with `auto_apply=true` applies validated patches automatically.
-- Duplicate error fingerprint is skipped during deduplication TTL.
+- Accepts fixes only for whitelisted paths.
+- Rejects forbidden paths even if suggested by the model.
+- Rejects empty replacement targets.
+- Applies validated patches automatically only with `dry_run=false` and `auto_apply=true`.
+- Skips duplicate error fingerprints during deduplication TTL.
 
-## Reporting
+## Reporting Channels
 
-- Telegram notification is sent when configured.
-- Slack incoming webhook notification is supported.
-- Generic webhook POST notification is supported.
-- Sentry envelope event reporting is supported.
-- JSON report is always available as fallback when enabled.
+- Telegram notifications.
+- Slack incoming webhook notifications.
+- Generic webhook (`POST`) notifications.
+- Sentry envelope event reporting.
+- JSON fallback report when enabled.
