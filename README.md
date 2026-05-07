@@ -10,12 +10,12 @@
 [![Last Commit](https://img.shields.io/github/last-commit/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/commits/main)
 [![Open Issues](https://img.shields.io/github/issues/universe-coder/laravel-self-heallm.svg?style=flat-square)](https://github.com/universe-coder/laravel-self-heallm/issues)
 
-Open-source Laravel package that detects recent application errors, asks an LLM for a fix proposal via an OpenAI-compatible API, validates safety rules, applies fixes in hybrid mode, and sends healing reports.
+Open-source Laravel package that detects recent application errors, asks an LLM for a fix proposal (OpenAI, Anthropic, Hugging Face, or Ollama), validates safety rules, applies fixes in hybrid mode, and sends healing reports.
 
 ## What It Does
 
 - Detects recent app errors and builds a repair context.
-- Requests a fix proposal from an OpenAI-compatible model.
+- Requests a fix proposal from a configured LLM provider.
 - Validates proposed changes against strict safety rules.
 - Applies validated fixes in `dry-run` or auto-apply mode.
 - Sends reports to chat/monitoring channels.
@@ -35,7 +35,11 @@ Main config file: `config/self-heal.php`
 
 Supported sections:
 
+- Provider selector: `llm.provider` (`openai`, `anthropic`, `huggingface`, `ollama`)
 - OpenAI: `openai.base_url`, `openai.token`, `openai.model`, `openai.timeout`
+- Anthropic: `anthropic.base_url`, `anthropic.token`, `anthropic.model`, `anthropic.timeout`, `anthropic.version`
+- Hugging Face (OpenAI-compatible endpoint): `huggingface.base_url`, `huggingface.token`, `huggingface.model`, `huggingface.timeout`
+- Ollama (OpenAI-compatible endpoint): `ollama.base_url`, `ollama.token`, `ollama.model`, `ollama.timeout`
 - Telegram: `telegram.bot_token`, `telegram.user_id`, `telegram.enabled`
 - Slack: `slack.enabled`, `slack.webhook_url`
 - Generic webhook: `webhook.enabled`, `webhook.url`, `webhook.token`
@@ -52,9 +56,19 @@ Example `.env` values:
 SELF_HEAL_ENABLED=true
 SELF_HEAL_AUTO_APPLY=false
 SELF_HEAL_DRY_RUN=true
+SELF_HEAL_LLM_PROVIDER=openai
 SELF_HEAL_OPENAI_BASE_URL=https://api.openai.com/v1
 SELF_HEAL_OPENAI_TOKEN=sk-...
 SELF_HEAL_OPENAI_MODEL=gpt-4.1-mini
+SELF_HEAL_ANTHROPIC_BASE_URL=https://api.anthropic.com/v1
+SELF_HEAL_ANTHROPIC_TOKEN=
+SELF_HEAL_ANTHROPIC_MODEL=claude-3-5-sonnet-latest
+SELF_HEAL_HUGGINGFACE_BASE_URL=https://router.huggingface.co/v1
+SELF_HEAL_HUGGINGFACE_TOKEN=
+SELF_HEAL_HUGGINGFACE_MODEL=openai/gpt-oss-120b
+SELF_HEAL_OLLAMA_BASE_URL=http://localhost:11434/v1
+SELF_HEAL_OLLAMA_TOKEN=
+SELF_HEAL_OLLAMA_MODEL=llama3.1
 SELF_HEAL_TELEGRAM_BOT_TOKEN=123:abc
 SELF_HEAL_TELEGRAM_USER_ID=123456789
 SELF_HEAL_SLACK_ENABLED=false
@@ -68,6 +82,13 @@ SELF_HEAL_DEDUP_ENABLED=true
 SELF_HEAL_DEDUP_TTL_SECONDS=600
 SELF_HEAL_CONTEXT_MAX_FILE_CHARS=12000
 ```
+
+Provider notes:
+
+- `openai`: default provider, no migration needed for existing setups.
+- `anthropic`: uses native Anthropic Messages API.
+- `huggingface`: in this version, use an OpenAI-compatible Hugging Face endpoint.
+- `ollama`: in this version, use Ollama's OpenAI-compatible endpoint (`/v1/chat/completions`).
 
 ### 3) Run
 

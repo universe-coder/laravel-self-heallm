@@ -6,6 +6,9 @@ return [
     'enabled' => env('SELF_HEAL_ENABLED', true),
     'auto_apply' => env('SELF_HEAL_AUTO_APPLY', false),
     'dry_run' => env('SELF_HEAL_DRY_RUN', true),
+    'llm' => [
+        'provider' => env('SELF_HEAL_LLM_PROVIDER', 'openai'),
+    ],
     'max_files_per_fix' => (int) env('SELF_HEAL_MAX_FILES_PER_FIX', 3),
     'allowed_paths' => [
         'app/',
@@ -22,6 +25,25 @@ return [
         'token' => env('SELF_HEAL_OPENAI_TOKEN'),
         'model' => env('SELF_HEAL_OPENAI_MODEL', 'gpt-4.1-mini'),
         'timeout' => (int) env('SELF_HEAL_OPENAI_TIMEOUT', 30),
+    ],
+    'anthropic' => [
+        'base_url' => env('SELF_HEAL_ANTHROPIC_BASE_URL', 'https://api.anthropic.com/v1'),
+        'token' => env('SELF_HEAL_ANTHROPIC_TOKEN'),
+        'model' => env('SELF_HEAL_ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest'),
+        'timeout' => (int) env('SELF_HEAL_ANTHROPIC_TIMEOUT', 30),
+        'version' => env('SELF_HEAL_ANTHROPIC_VERSION', '2023-06-01'),
+    ],
+    'huggingface' => [
+        'base_url' => env('SELF_HEAL_HUGGINGFACE_BASE_URL', 'https://router.huggingface.co/v1'),
+        'token' => env('SELF_HEAL_HUGGINGFACE_TOKEN'),
+        'model' => env('SELF_HEAL_HUGGINGFACE_MODEL', 'openai/gpt-oss-120b'),
+        'timeout' => (int) env('SELF_HEAL_HUGGINGFACE_TIMEOUT', 30),
+    ],
+    'ollama' => [
+        'base_url' => env('SELF_HEAL_OLLAMA_BASE_URL', 'http://localhost:11434/v1'),
+        'token' => env('SELF_HEAL_OLLAMA_TOKEN'),
+        'model' => env('SELF_HEAL_OLLAMA_MODEL', 'llama3.1'),
+        'timeout' => (int) env('SELF_HEAL_OLLAMA_TIMEOUT', 30),
     ],
     'telegram' => [
         'enabled' => env('SELF_HEAL_TELEGRAM_ENABLED', true),

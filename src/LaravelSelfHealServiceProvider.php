@@ -9,6 +9,9 @@ use SelfHealLM\Application\SelfHealPipeline;
 use SelfHealLM\Console\RunSelfHealCommand;
 use SelfHealLM\Contracts\LLMClientInterface;
 use SelfHealLM\Contracts\ReporterInterface;
+use SelfHealLM\Infrastructure\Anthropic\AnthropicClient;
+use SelfHealLM\Infrastructure\HuggingFace\HuggingFaceClient;
+use SelfHealLM\Infrastructure\Ollama\OllamaClient;
 use SelfHealLM\Infrastructure\OpenAI\OpenAIClient;
 use SelfHealLM\Infrastructure\Reporting\CompositeReporter;
 use SelfHealLM\Infrastructure\Reporting\FileReporter;
@@ -23,7 +26,21 @@ final class LaravelSelfHealServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/self-heal.php', 'self-heal');
 
-        $this->app->singleton(LLMClientInterface::class, OpenAIClient::class);
+        $this->app->singleton(OpenAIClient::class);
+        $this->app->singleton(AnthropicClient::class);
+        $this->app->singleton(HuggingFaceClient::class);
+        $this->app->singleton(OllamaClient::class);
+        $this->app->singleton(LLMClientInterface::class, function (): LLMClientInterface {
+            $provider = (string) config('self-heal.llm.provider', 'openai');
+
+            return match ($provider) {
+                'openai' => $this->app->make(OpenAIClient::class),
+                'anthropic' => $this->app->make(AnthropicClient::class),
+                'huggingface' => $this->app->make(HuggingFaceClient::class),
+                'ollama' => $this->app->make(OllamaClient::class),
+                default => $this->app->make(OpenAIClient::class),
+            };
+        });
         $this->app->singleton(TelegramReporter::class);
         $this->app->singleton(SlackReporter::class);
         $this->app->singleton(WebhookReporter::class);

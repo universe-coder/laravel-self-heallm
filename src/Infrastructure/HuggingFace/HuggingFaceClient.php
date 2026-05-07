@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SelfHealLM\Infrastructure\OpenAI;
+namespace SelfHealLM\Infrastructure\HuggingFace;
 
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +11,7 @@ use SelfHealLM\Domain\Error\ErrorContext;
 use SelfHealLM\Domain\Fix\FixProposal;
 use SelfHealLM\Infrastructure\LLM\BuildsFixProposal;
 
-final class OpenAIClient implements LLMClientInterface
+final class HuggingFaceClient implements LLMClientInterface
 {
     use BuildsFixProposal;
 
@@ -21,16 +21,14 @@ final class OpenAIClient implements LLMClientInterface
 
     public function proposeFix(ErrorContext $errorContext): FixProposal
     {
-        $baseUrl = rtrim((string) $this->config->get('self-heal.openai.base_url', ''), '/');
-        $token = (string) $this->config->get('self-heal.openai.token', '');
-        $model = (string) $this->config->get('self-heal.openai.model', 'gpt-4.1-mini');
-        $timeout = (int) $this->config->get('self-heal.openai.timeout', 30);
+        $baseUrl = rtrim((string) $this->config->get('self-heal.huggingface.base_url', ''), '/');
+        $token = (string) $this->config->get('self-heal.huggingface.token', '');
+        $model = (string) $this->config->get('self-heal.huggingface.model', '');
+        $timeout = (int) $this->config->get('self-heal.huggingface.timeout', 30);
 
-        if ($baseUrl === '' || $token === '') {
-            return new FixProposal('OpenAI not configured.', [], ['Missing OpenAI base_url or token.']);
+        if ($baseUrl === '' || $token === '' || $model === '') {
+            return new FixProposal('Hugging Face not configured.', [], ['Missing Hugging Face base_url, token, or model.']);
         }
-
-        $prompt = $this->buildPrompt($errorContext);
 
         $response = Http::timeout($timeout)
             ->withToken($token)
@@ -38,14 +36,14 @@ final class OpenAIClient implements LLMClientInterface
                 'model' => $model,
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a secure PHP/Laravel fixer. Return strict JSON only.'],
-                    ['role' => 'user', 'content' => $prompt],
+                    ['role' => 'user', 'content' => $this->buildPrompt($errorContext)],
                 ],
                 'temperature' => 0.1,
                 'response_format' => ['type' => 'json_object'],
             ]);
 
         if (!$response->successful()) {
-            return new FixProposal('OpenAI request failed.', [], ['HTTP ' . $response->status()]);
+            return new FixProposal('Hugging Face request failed.', [], ['HTTP ' . $response->status()]);
         }
 
         $content = (string) data_get($response->json(), 'choices.0.message.content', '');
